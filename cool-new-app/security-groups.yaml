@@ -1,0 +1,19 @@
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: SecurityGroup
+metadata:
+  name: cool-new-instances-sg
+spec:
+  forProvider:
+    region: us-east-1
+    vpcIdRef:
+      name: cool-new
+    groupName: cool-new-instances-sg
+    description: :)
+    ingress:
+      - fromPort: 22
+        toPort: 22
+        ipProtocol: tcp
+        ipRanges:
+          - cidrIp: 10.0.0.0/16
+  providerConfigRef:
+    name: localstack

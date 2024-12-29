@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cool-new-app
+  namespace: argocd
+  labels:
+    name: cool-new-app
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/leunamnauj/Crossplane-Argocd-and-localstack-for-local-environments.git
+    targetRevision: HEAD
+    path: cool-new-app
+    directory:
+      recurse: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cool-new-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - CreateNamespace=true
+  revisionHistoryLimit: 10
